@@ -6,7 +6,7 @@ import s from './ContactList.module.css';
 const ContactList = ({ contacts, onDeleteContact }) => (
   <ul className={s.list}>
     {contacts.map(({ id, name, number }) => (
-      <li key={id}>
+      <li key={name}>
         <ContactItem
           name={name}
           id={id}

@@ -1,11 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { nanoid } from 'nanoid';
 import s from './Form.module.css';
+import { useDispatch } from 'react-redux';
+import { addContact } from '../../redux/slice';
 
 function Form({ onSubmit }) {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-
+  const dispatch = useDispatch();
   let nameId = nanoid();
   let numberId = nanoid();
 
@@ -20,6 +22,7 @@ function Form({ onSubmit }) {
   const handleSubmit = event => {
     event.preventDefault();
     const data = { name, number };
+    dispatch(addContact(data));
     onSubmit(data);
     reset();
   };

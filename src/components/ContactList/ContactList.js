@@ -1,25 +1,35 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { deleteContact } from '../../redux/slice';
 import ContactItem from '../ContactItem';
 import s from './ContactList.module.css';
 
-const ContactList = ({ contacts, onDeleteContact }) => (
-  <ul className={s.list}>
-    {contacts.map(({ id, name, number }) => (
-      <li key={name}>
-        <ContactItem
-          name={name}
-          id={id}
-          number={number}
-          onDeleteContact={onDeleteContact}
-        />
-      </li>
-    ))}
-  </ul>
-);
+function ContactList() {
+  const contacts = useSelector(state => state.contacts.items);
+  const filter = useSelector(state => state.contacts.filter);
+  const dispatch = useDispatch();
+  const onDeleteContact = name => dispatch(deleteContact(name));
+  const getVisibleContacts = () => {
+    const normalizedFilter = filter.toLowerCase();
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(normalizedFilter)
+    );
+  };
+  const visibleContacts = getVisibleContacts();
+  return (
+    <ul className={s.list}>
+      {visibleContacts.map(({ name, number }) => (
+        <li key={name}>
+          <ContactItem
+            name={name}
+            number={number}
+            onDeleteContact={onDeleteContact}
+          />
+        </li>
+      ))}
+    </ul>
+  );
+}
 
-ContactList.propTypes = {
-  contacts: PropTypes.array.isRequired,
-  onDeleteContact: PropTypes.func.isRequired,
-};
 export default ContactList;
